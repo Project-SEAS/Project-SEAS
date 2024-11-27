@@ -3,25 +3,28 @@ function getSheetData() {
   
   // Ensure the sheet and data exist
   if (!sheet) {
+    Logger.log('Sheet not found');
     return HtmlService.createHtmlOutput('<p>Error: Sheet not found</p>');
   }
 
   var lastRow = sheet.getLastRow();
-  Logger.log('Last Row: ' + lastRow); // Log the last row for debugging
+  Logger.log('Last Row: ' + lastRow); // Log the last row to verify if there’s data
+
   if (lastRow === 0) {
+    Logger.log('No data available');
     return HtmlService.createHtmlOutput('<p>No data available</p>');
   }
 
-  // Fetch the latest data from columns D to K
+  // Fetch the latest data from columns D to K (columns 4-11)
   var data = sheet.getRange(lastRow, 4, 1, 8).getValues()[0];
-  Logger.log('Fetched Data: ' + JSON.stringify(data)); // Log the data for debugging
+  Logger.log('Fetched Data: ' + JSON.stringify(data)); // Log the data
 
   // Process data to extract only numbers
   var processedData = data.map(item => {
     return item.toString().replace(/[^\d.-]/g, ''); // Keep only digits, decimal points, and minus signs
   });
 
-  Logger.log('Processed Data: ' + JSON.stringify(processedData)); // Log the processed data for debugging
+  Logger.log('Processed Data: ' + JSON.stringify(processedData)); // Log the processed data
 
   var parameters = [
     { label: "Wind Speed", value: processedData[0], unit: "m/s" },
